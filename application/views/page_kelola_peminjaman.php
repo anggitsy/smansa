@@ -7,7 +7,7 @@
                     <div class="header">
                         <div class="row clearfix">
                             <div class="col-xs-12 col-sm-12">
-                                <h2>Kelola Peminjaman Prasarana</h2>
+                                <h2>Kelola Peminjaman Sarana</h2>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,47 @@
                         <h4 class="modal-title">Detail Peminjaman</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="fetched-data"></div>
+                        <div class="fetched-data">
+                            <form method="post" action="<?php echo base_url('c_pengelola/update_status');?>">
+                <input type="hidden" name="id_peminjaman" id="id_peminjaman">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label id="modal">Nama Sarana</label>
+                        <input type="text" class="form-control" name="nama_sarana" id="nama_sarana" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label id="modal">Nama Peminjam</label>
+                        <input type="text" class="form-control" name="nama" id="nama" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label>Status Peminjaman</label>
+                        <select name="status_peminjaman" id="status_peminjaman" class="form-control show-tick">
+                            <option value="Menunggu Konfimasi">Menunggu Konfimasi</option>
+                            <option value="Sudah Konfirmasi">Sudah Konfirmasi</option>
+                            <option value="Sedang Dipinjam">Sedang Dipinjam</option>
+                            <option value="Terkonfirmasi">Telah Kembali</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label id="modal">Tanggal Pinjam</label>
+                        <input type="text" class="form-control" name="tanggal" id="tanggal" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label id="modal">Jam</label>
+                        <input type="text" class="form-control" name="tanggalkembali" id="tanggalkembali" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label id="modal">Keterangan</label>
+                        <input type="text" class="form-control" name="keterangan">
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit"><i class="material-icons">check</i>Update</button>
+            </form>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
@@ -91,46 +131,39 @@
 <script src="<?=base_url(); ?>plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <!-- Waves Effect Plugin Js -->
 <script src="<?=base_url(); ?>plugins/node-waves/waves.js"></script>
-<!-- Jquery CountTo Plugin Js -->
-<script src="<?=base_url(); ?>plugins/jquery-countto/jquery.countTo.js"></script>
-<!-- Morris Plugin Js -->
-<script src="<?=base_url(); ?>plugins/raphael/raphael.min.js"></script>
-<script src="<?=base_url(); ?>plugins/morrisjs/morris.js"></script>
-<!-- ChartJs -->
-<script src="<?=base_url(); ?>plugins/chartjs/Chart.bundle.js"></script>
-<!-- Flot Charts Plugin Js -->
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.resize.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.pie.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.categories.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.time.js"></script>
-<!-- Sparkline Chart Plugin Js -->
-<script src="<?=base_url(); ?>plugins/jquery-sparkline/jquery.sparkline.js"></script>
+<!-- Jquery DataTable Plugin Js -->
+<script src="<?=base_url(); ?>plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="<?=base_url(); ?>plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
 <!-- Custom Js -->
 <script src="<?=base_url(); ?>js/admin.js"></script>
 <script src="<?=base_url(); ?>js/pages/index.js"></script>
 <!-- Demo Js -->
 <script src="<?=base_url(); ?>js/demo.js"></script>
 <script type="text/javascript">
-  $(document).ready(function(){
-    $('#datatables-example').DataTable();
-  });
+    $('#myModal').on('show.bs.modal', function (e) {
+        var rowid = $(e.relatedTarget).data('id');
+        var base_url = window.location.origin;
+        $.ajax({
+            type    : 'post',
+            dataType: 'json',
+            url     :  base_url+'/smansa/c_pengelola/modal_detail',
+            data    : 'rowid='+rowid,
 
-  $('#myModal').on('show.bs.modal', function (e) {
-      var rowid = $(e.relatedTarget).data('id');
-      var base_url = window.location.origin;
-
-
-      $.ajax({
-          type    : 'post',
-          url     :  base_url+'/smansa/c_pengelola/modal_detail',
-          data    : 'rowid='+rowid,
-
-          success : function(data){
-            $('.fetched-data').html(data);
-          }
-      });
-   });
+            success : function(response){
+                if (response != 'error') {
+                    $('#id_peminjaman').val(response.id_peminjaman);
+                    $('#nama_sarana').val(response.nama_prasarana);
+                    $('#nama').val(response.nama);
+                    $('#status_peminjaman').val(response.status_peminjaman);
+                    $('#tanggal').val(response.tanggal);
+                    $('#tanggalkembali').val(response.jam);
+                }
+            }
+        });
+    });
+    $('.js-basic-example').DataTable({
+        responsive: true
+    });
 </script>
 </body>
 </html>

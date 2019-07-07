@@ -27,11 +27,17 @@
     <!-- Custom Css -->
     <link href="<?=base_url(); ?>css/style.css?<?=time(); ?>" rel="stylesheet">
 
+    <!-- Bootstrap Select Css -->
+    <link href="<?=base_url(); ?>plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    
+    <!-- Bootstrap Spinner Css -->
+    <link href="<?=base_url(); ?>plugins/jquery-spinner/css/bootstrap-spinner.css" rel="stylesheet">
+
+    <!-- Bootstrap Material Datetime Picker Css -->
+    <link href="<?=base_url(); ?>plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css?<?php echo time(); ?>" rel="stylesheet" />
+
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="<?=base_url(); ?>css/themes/all-themes.css" rel="stylesheet" />
-    
-    <!-- Bootstrap Material Datetime Picker Css -->
-    <link href="<?=base_url(); ?>plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 </head>
 <body class="theme-red">
     <!-- Page Loader -->
@@ -125,7 +131,7 @@
                         </a>
                     </li>
                     <li class="<?php echo $back_header; ?>">
-                        <a href="">
+                        <a href="<?php echo base_url(); ?>c_pengelola/page_kelola_pengembalian">
                             <i class="material-icons">input</i>
                             <span>Kelola Pengembalian</span>
                         </a>
@@ -215,13 +221,13 @@
     </section>
     <script>
 // Add active class to the current button (highlight it)
-var header = document.getElementById("menu");
-var btns = header.getElementsByClassName("hea");
-for (var i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function() {
-    var current = document.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    this.className += " active";
-  });
-}
+// var header = document.getElementById("menu");
+// var btns = header.getElementsByClassName("header");
+// for (var i = 0; i < btns.length; i++) {
+//   btns[i].addEventListener("click", function() {
+//     var current = document.getElementsByClassName("active");
+//     current[0].className = current[0].className.replace(" active", "");
+//     this.className += " active";
+//   });
+// }
 </script>

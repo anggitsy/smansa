@@ -116,7 +116,7 @@
                     <li class="<?php echo $rental_header; ?>">
                         <a href="<?php echo base_url(); ?>c_siswa/page_pinjam_sarana">
                             <i class="material-icons">input</i>
-                            <span>Permohonan Pinjam Prasarana</span>
+                            <span>Permohonan Pinjam Sarana</span>
                         </a>
                     </li>
                     <li class="<?php echo $status_header; ?>">
@@ -204,13 +204,13 @@
     </section>
     <script>
 // Add active class to the current button (highlight it)
-var header = document.getElementById("menu");
-var btns = header.getElementsByClassName("hea");
-for (var i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function() {
-    var current = document.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    this.className += " active";
-  });
-}
+// var header = document.getElementById("menu");
+// var btns = header.getElementsByClassName("header");
+// for (var i = 0; i < btns.length; i++) {
+//   btns[i].addEventListener("click", function() {
+//     var current = document.getElementsByClassName("active");
+//     current[0].className = current[0].className.replace(" active", "");
+//     this.className += " active";
+//   });
+// }
 </script>

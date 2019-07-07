@@ -11,11 +11,11 @@
                         <div class="body">
                        <?php echo $this->session->flashdata('info'); ?>  
                         <div class="table-responsive">
-                            <table id="#datatables-example" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables-example" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Prasarana</th>
+                                        <th>Sarana</th>
                                         <th>Nama Siswa</th>
                                         <th>Tanggal Pinjam</th>
                                         <th>Tanggal Kembali</th>
@@ -116,6 +116,10 @@
     <!-- Bootstrap Material Datetime Picker Plugin Js -->
     <script src="<?=base_url(); ?>plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="<?=base_url(); ?>plugins/jquery-datatable/jquery.dataTables.js"></script>
+    <script src="<?=base_url(); ?>plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+
     <!-- Custom Js -->
     <script src="<?=base_url(); ?>js/admin.js"></script>
     <script src="<?=base_url(); ?>js/pages/forms/basic-form-elements.js"></script>
@@ -139,7 +143,9 @@
     </script>
     <script type="text/javascript">
       $(document).ready(function(){
-        $('#datatables-example').DataTable();
+        $('#datatables-example').DataTable({
+            responsive:true
+        });
       });
 
       $('#myModal').on('show.bs.modal', function (e) {

@@ -7,6 +7,7 @@ class C_siswa extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('M_peminjaman','pinjam');
+		$this->load->model('M_prasarana','prasarana');
 	}
 	public function page_pinjam_sarana()
 	{
@@ -27,19 +28,28 @@ class C_siswa extends CI_Controller {
 
 	public function insert_rental()
 	{
-		$rent = array(
-			'id_prasarana' => $this->input->post('id_prasarana'), 
-			'id_peminjam' => $this->session->userdata('logged_in')['id_peminjam'],
-			'jumlah' => $this->input->post('jumlah'), 
-			'jam' => $this->input->post('jam'), 
-			'tanggal' => date('Y-m-d',strtotime($this->input->post('tanggal'))),
-			'status' => 'Menunggu Konfirmasi',
-			'durasi' => 2 
-		);
+		$this->form_validation->set_rules('id_prasarana', 'ID Prasarana', 'required');
+		$this->form_validation->set_rules('jumlah', 'Jumlah', 'required|numeric');
+		$this->form_validation->set_rules('jam', 'Jam', 'required');
+		$this->form_validation->set_rules('tanggal', 'Tanggal', 'required');
+		if ($this->form_validation->run()) {
+			$rent = array(
+				'id_prasarana' => $this->input->post('id_prasarana'), 
+				'id_peminjam' => $this->session->userdata('logged_in')['id_peminjam'],
+				'jumlah' => $this->input->post('jumlah'), 
+				'jam' => $this->input->post('jam'), 
+				'tanggal' => date('Y-m-d',strtotime($this->input->post('tanggal'))),
+				'status' => 'Menunggu Konfirmasi',
+				'durasi' => 2,
+				'alasan_pinjam' => $this->input->post('alasan_pinjam')
+			);
 
-		if($this->pinjam->insert($rent)){
-			echo "sukses";
-		}else{
+			if($this->pinjam->insert($rent)){
+				redirect('c_siswa/page_lihat_status','refresh');
+			}else{
+				echo "gagal";
+			}
+		} else {
 			echo "gagal";
 		}
 	}
@@ -61,6 +71,13 @@ class C_siswa extends CI_Controller {
 			$this->load->view('lihat_status.php', $data2);
 		}
     }
+    
+    public function logout()
+    {
+        $this->session->set_userdata('logged_in', FALSE);
+        session_destroy();
+        redirect($this->index);
+    }
 
     public function modal_detail()
 	{
@@ -71,7 +88,7 @@ class C_siswa extends CI_Controller {
 	            <input type="hidden" name="id_user" value="'.$row->id_peminjaman.'">
 	            <div class="form-group row">
                     <div class="col-md-6">
-		                <label id="modal">Nama Prasarana</label>
+		                <label id="modal">Nama Sarana</label>
 		                <input type="text" class="form-control" name="nama" value="'.$row->nama_prasarana.'" readonly>
 		            </div>
                     <div class="col-md-6">
@@ -89,30 +106,26 @@ class C_siswa extends CI_Controller {
 	                	<input type="text" class="form-control" name="tanggal" value="'.$row->tanggal.'" readonly>
 	                </div>
 	            </div>
-	            <div class="form-group row">
-	            	<div class="col-md-6">
-		                <label id="modal">Durasi</label>
-		                <input type="text" class="form-control" name="durasi" value="'.$row->durasi.'" readonly>
-	                </div>
+	            
 	                <div class="col-md-6">
 	                	<label id="modal">Jam</label>
 	                	<input type="text" class="form-control" name="tanggalkembali" value="'.$row->jam.'" readonly>
 	                </div>
 	            </div>
-	            <div class="form-group row">
-	            	<div class="col-md-6">
-		                <label id="modal">Kondisi Pinjam</label>
-		                <input type="text" class="form-control" name="durasi" value="'.$row->kondisi_pinjam.'" readonly>
-	                </div>
-	                <div class="col-md-6">
-	                	<label id="modal">Jam</label>
-	                	<input type="text" class="form-control" name="tanggalkembali" value="'.$row->durasi.'" readonly>
-	                </div>
+	            
+	                
 	            </div>
 	        </form>';
 		}else{
-			echo 'Error boy';
+			echo 'Error';
 		}
+	}
+
+	public function get_stok_prasarana()
+	{
+		$id_prasarana = $this->input->post('id_prasarana');
+		//TO DO: get stok sarana
+		echo json_encode($this->input->post());
 	}
 }
 

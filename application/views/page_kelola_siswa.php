@@ -22,6 +22,7 @@
                                         <th>Nama Lengkap</th>
                                         <th>Email</th>
                                         <th>Status</th>
+                                        <th>Keterangan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -39,10 +40,11 @@
                                         <td><?=$s->nama; ?></td>
                                         <td><?=$s->email; ?></td>
                                         <td><?=$s->status; ?></td>
+                                        <td><?php //$s->status; ?></td>
                                         <td>
                                             <a href='#myModal' type="button" class=" btn btn-3d btn-primary" data-toggle='modal' data-id="<?= $s->id_peminjam; ?>">
                                                 <i class="material-icons">edit</i> Edit</a>
-                                            </td>
+                                        </td>
                                         </tr>
                                     <?php $no++; ?>
                                     <?php endforeach; ?>
@@ -88,46 +90,33 @@
 <script src="<?=base_url(); ?>plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <!-- Waves Effect Plugin Js -->
 <script src="<?=base_url(); ?>plugins/node-waves/waves.js"></script>
-<!-- Jquery CountTo Plugin Js -->
-<script src="<?=base_url(); ?>plugins/jquery-countto/jquery.countTo.js"></script>
-<!-- Morris Plugin Js -->
-<script src="<?=base_url(); ?>plugins/raphael/raphael.min.js"></script>
-<script src="<?=base_url(); ?>plugins/morrisjs/morris.js"></script>
-<!-- ChartJs -->
-<script src="<?=base_url(); ?>plugins/chartjs/Chart.bundle.js"></script>
-<!-- Flot Charts Plugin Js -->
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.resize.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.pie.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.categories.js"></script>
-<script src="<?=base_url(); ?>plugins/flot-charts/jquery.flot.time.js"></script>
-<!-- Sparkline Chart Plugin Js -->
-<script src="<?=base_url(); ?>plugins/jquery-sparkline/jquery.sparkline.js"></script>
+<!-- Jquery DataTable Plugin Js -->
+<script src="<?=base_url(); ?>plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="<?=base_url(); ?>plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
 <!-- Custom Js -->
 <script src="<?=base_url(); ?>js/admin.js"></script>
 <script src="<?=base_url(); ?>js/pages/index.js"></script>
 <!-- Demo Js -->
 <script src="<?=base_url(); ?>js/demo.js"></script>
 <script type="text/javascript">
-  $(document).ready(function(){
-    $('#datatables-example').DataTable();
-  });
 
-  $('#myModal').on('show.bs.modal', function (e) {
-      var rowid = $(e.relatedTarget).data('id');
-      var base_url = window.location.origin;
+    $('#myModal').on('show.bs.modal', function (e) {
+        var rowid = $(e.relatedTarget).data('id');
+        var base_url = window.location.origin;
 
+        $.ajax({
+            type    : 'post',
+            url     :  base_url+'/smansa/c_pengelola/modal_siswa',
+            data    : 'rowid='+rowid,
 
-      $.ajax({
-          type    : 'post',
-          url     :  base_url+'/smansa/c_pengelola/modal_siswa',
-          data    : 'rowid='+rowid,
-
-          success : function(data){
-            $('.fetched-data').html(data);
-          }
-      });
-   });
+            success : function(data){
+                $('.fetched-data').html(data);
+            }
+        });
+    });
+    $('.js-basic-example').DataTable({
+        responsive: true
+    });
 </script>
 </body>
 </html>

@@ -52,3 +52,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'c_pengelola';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+$route['logout'] = 'c_pengelola/logout';

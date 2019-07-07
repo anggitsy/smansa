@@ -106,6 +106,19 @@ class M_peminjam extends CI_Model {
 		return $this->db->update($this->_tabel, $data);
 	}
 
+public function getJumlah($id_prasarana) {
+	$jumlah=0;
+	$row = $this->db->query("SELECT sum(stok_tersedia) as jumlah from tb_prasarana WHERE id_prasarana=$id_prasarana")->row();
+	if ($row){
+		$jumlah = $row->jumlah;
+	}
+	else {
+		$jumlah=0;
+	}
+	return $jumlah;
+}
+
+
 }
 
 /* End of file m_peminjam.php */

@@ -8,6 +8,8 @@ class C_pengelola extends CI_Controller {
 		parent::__construct();
 		$this->load->model('m_peminjam','user');
 		$this->load->model('m_peminjaman','peminjaman');
+		$this->load->model('m_prasarana','prasarana');
+		$this->load->model('m_pengembalian','pengembalian');
 	}
 
 	public function index()
@@ -72,7 +74,7 @@ class C_pengelola extends CI_Controller {
 
 	public function page_kelola_prasarana()
 	{
-		$data['peminjaman'] = $this->peminjaman->get_all_peminjaman();
+		$data['prasarana'] = $this->prasarana->get_all_prasarana();
 		$data1['home_header'] 		= "";
 		$data1['student_header'] 	= "";
 		$data1['rental_header'] 	= "";
@@ -82,6 +84,20 @@ class C_pengelola extends CI_Controller {
 
 		$this->load->view('header.php', $data1);
 		$this->load->view('page_kelola_prasarana.php',$data);
+	}
+
+	public function page_kelola_pengembalian()
+	{
+		$data['pengembalian'] = $this->pengembalian->get_all_pengembalian();
+		$data1['home_header'] 		= "";
+		$data1['student_header'] 	= "";
+		$data1['rental_header'] 	= "";
+		$data1['prasarana_header'] 	= "";
+		$data1['back_header'] 		= "active";
+		$data1['report_header'] 	= "";
+
+		$this->load->view('header.php', $data1);
+		$this->load->view('page_kelola_pengembalian.php',$data);
 	}
 
 	public function buat_akun()
@@ -327,76 +343,214 @@ class C_pengelola extends CI_Controller {
 	{
 		if($this->input->post('rowid')){
 			$row = $this->peminjaman->get('id_peminjaman',$this->input->post('rowid'));
-
-			if ($row->status_peminjaman=="Menunggu Konfirmasi") {
-				$option = '<option value="Menunggu Konfimasi" selected>Menunggu Konfimasi</option>
-	            			<option value="Sudah Konfirmasi">Sudah Konfirmasi</option>
-	            			<option value="Sedang Dipinjam">Sedang Dipinjam</option>
-	            			<option value="Terkonfirmasi">Telah Kembali</option>';
-			} else if ($row->status_peminjaman=="Sudah Konfirmasi") {
-				$option = '<option value="Menunggu Konfimasi">Menunggu Konfimasi</option>
-	            			<option value="Sudah Konfirmasi" selected>Sudah Konfirmasi</option>
-	            			<option value="Sedang Dipinjam">Sedang Dipinjam</option>
-	            			<option value="Terkonfirmasi">Telah Kembali</option>';
-			} else if ($row->status_peminjaman=="Sedang Dipinjam"){ 
-				$option = '<option value="Menunggu Konfimasi">Menunggu Konfimasi</option>
-	            			<option value="Sudah Konfirmasi">Sudah Konfirmasi</option>
-	            			<option value="Sedang Dipinjam" selected>Sedang Dipinjam</option>
-	            			<option value="Terkonfirmasi">Telah Kembali</option>';
-			} else {
-				$option = '<option value="Menunggu Konfimasi">Menunggu Konfimasi</option>
-	            			<option value="Sudah Konfirmasi">Sudah Konfirmasi</option>
-	            			<option value="Sedang Dipinjam">Sedang Dipinjam</option>
-	            			<option value="Terkonfirmasi" selected>Telah Kembali</option>';
-			}
-
-			echo '<form method="post" action="'.base_url().'c_pengelola/update_status">
-	            <input type="hidden" name="id_peminjaman" value="'.$row->id_peminjaman.'">
-	            <div class="form-group row">
-                    <div class="col-md-6">
-		                <label id="modal">Nama Prasarana</label>
-		                <input type="text" class="form-control" name="nama" value="'.$row->nama_prasarana.'" readonly>
-		            </div>
-                    <div class="col-md-6">
-		                <label id="modal">Nama Peminjam</label>
-		                <input type="text" class="form-control" name="nama" value="'.$row->nama.'" readonly>
-	                </div>
-	            </div>
-	            <div class="form-group row">
-	            	<div class="col-md-6">
-		                <label>Status Peminjaman</label>
-		                <select name="status_peminjaman" class="form-control show-tick">'.$option.'</select>
-	                </div>
-	                <div class="col-md-6">
-	                	<label id="modal">Tanggal Pinjam</label>
-	                	<input type="text" class="form-control" name="tanggal" value="'.$row->tanggal.'" readonly>
-	                </div>
-	            </div>
-	            <div class="form-group row">
-	            	<div class="col-md-6">
-		                <label id="modal">Durasi</label>
-		                <input type="text" class="form-control" name="durasi" value="'.$row->durasi.'" readonly>
-	                </div>
-	                <div class="col-md-6">
-	                	<label id="modal">Jam</label>
-	                	<input type="text" class="form-control" name="tanggalkembali" value="'.$row->jam.'" readonly>
-	                </div>
-	            </div>
-	            <div class="form-group row">
-	            	<div class="col-md-6">
-		                <label id="modal">Kondisi Pinjam</label>
-		                <input type="text" class="form-control" name="durasi" value="'.$row->kondisi_pinjam.'" readonly>
-	                </div>
-	                <div class="col-md-6">
-	                	<label id="modal">Jam</label>
-	                	<input type="text" class="form-control" name="tanggalkembali" value="'.$row->durasi.'" readonly>
-	                </div>
-	            </div>
-	            <button class="btn btn-primary" type="submit"><i class="material-icons">check</i>  Update</button>
-
-	        </form>';
+			echo json_encode($row);
 		}else{
 			echo 'Error';
+		}
+	}
+
+	public function modal_add_pengembalian()
+	{
+		echo '<form method="post" enctype="multipart/form-data" action="'.base_url().'c_pengelola/add_pengembalian">
+	            <div class="form-group row">
+                    <div class="col-md-6">
+		                <label id="modal">Nama Sarana</label>
+		                <input type="text" class="form-control" name="nama_prasarana" required>
+		            </div>
+                    <div class="col-md-6">
+		                <label id="modal">Stok</label>
+		                <input type="number" class="form-control" name="stok" required min="1">
+	                </div>
+	            </div>
+	            <div class="form-group row">
+	            	<div class="col-md-6">
+		                <label id="modal">Status Sarana</label>
+		                <select name = "status" class="form-control">
+		                <option value="Baik" selected>Baik</option>
+	            	<option value="Buruk">Buruk</option>
+	            	</select>
+	                </div>
+	                
+	      
+	            </div>
+	            <div class="form-group row">
+	                <div class="col-md-6">
+	                	<label id="modal">Foto Prasarana</label>
+	                	<input type="file" class="form-control" name="foto" required>
+	                </div>
+	            </div>
+	            <button class="btn btn-primary" type="submit"><i class="material-icons">check</i>  Save</button>
+	        </form>';
+	}
+
+	public function add_pengembalian()
+	{
+		# code...
+	}
+
+	public function modal_add_prasarana()
+	{
+		echo '<form method="post" enctype="multipart/form-data" action="'.base_url().'c_pengelola/add_prasarana">
+	            <div class="form-group row">
+                    <div class="col-md-6">
+		                <label id="modal">Nama Sarana</label>
+		                <input type="text" class="form-control" name="nama_prasarana" required>
+		            </div>
+                    <div class="col-md-6">
+		                <label id="modal">Stok</label>
+		                <input type="number" class="form-control" name="stok" required min="1">
+	                </div>
+	            </div>
+	            <div class="form-group row">
+	            	<div class="col-md-6">
+		                <label id="modal">Status Sarana</label>
+		                <select name = "status" class="form-control">
+		                <option value="Baik" selected>Baik</option>
+	            	<option value="Buruk">Buruk</option>
+	            	</select>
+	                </div>
+	                
+	      
+	            </div>
+	            <div class="form-group row">
+	                <div class="col-md-6">
+	                	<label id="modal">Foto Prasarana</label>
+	                	<input type="file" class="form-control" name="foto" required>
+	                </div>
+	            </div>
+	            <button class="btn btn-primary" type="submit"><i class="material-icons">check</i>  Save</button>
+	        </form>';
+	}
+
+	public function modal_detail_prasarana()
+	{
+		$prasarana = $this->prasarana->get('id_prasarana',$this->input->post('rowid'));
+		echo '<form method="post" enctype="multipart/form-data" action="'.base_url().'c_pengelola/edit_prasarana">
+				<input type="hidden" name="id_prasarana" value="'.$prasarana->id_prasarana.'">
+	            <div class="form-group row">
+                    <div class="col-md-6">
+		                <label id="modal">Nama Sarana</label>
+		                <input type="text" class="form-control" name="nama_prasarana" value="'.$prasarana->nama_prasarana.'" required>
+		            </div>
+	            </div>
+	            <div class="form-group row">
+	            	<div class="col-md-6">
+		                <label id="modal">Status Sarana</label>
+		                <select name = "status" class="form-control">
+		                <option value="Baik" selected>Baik</option>
+	            	<option value="Buruk">Buruk</option>
+	            	</select>
+	                </div>
+	            </div>
+	            <div class="form-group row">
+	                <div class="col-md-6">
+	                	<label id="modal">Foto Prasarana</label>
+	                	<input type="file" class="form-control" name="foto">
+	                	<input type="hidden" name="hidden_foto" value="'.$prasarana->foto.'">
+	                </div>
+	                <div class="col-md-6">
+	                	<img src="'.base_url().'/uploads/'.$prasarana->foto.'" alt="foto_prasarana" width="50%">
+	                </div>
+	            </div>
+	            <button class="btn btn-primary" type="submit"><i class="material-icons">check</i>  Save</button>
+	        </form>';
+	}
+
+	public function add_prasarana()
+	{
+		$this->form_validation->set_rules('nama_prasarana', 'Nama Prasarana', 'required');
+		$this->form_validation->set_rules('stok', 'Stok', 'required|numeric');
+		$this->form_validation->set_rules('status', 'Status Prasarana', 'required');
+
+		if ($this->form_validation->run()) {
+			if (!empty($_FILES['foto']['tmp_name'])) {
+				$config['upload_path']          = './uploads/';
+	            $config['allowed_types']        = 'gif|jpg|png';
+	            $config['max_size']             = 3000;
+	            $config['max_width']            = 1024;
+	            $config['max_height']           = 768;
+	            $config['encrypt_name']			= TRUE;
+
+	            $this->load->library('upload', $config);
+
+	            if ($this->upload->do_upload('foto'))
+	            {
+					$foto = $this->upload->data();
+	            } else {
+	            	$errors = $this->upload->display_errors();
+	            }
+			}
+
+			if (empty($errors)) {
+				$data = array(
+					'nama_prasarana' => $this->input->post('nama_prasarana'),
+					'stok' => $this->input->post('stok'),
+					'stok_tersedia' => $this->input->post('stok'),
+					'status' => $this->input->post('status'),
+					'foto' => (empty($foto)) ? "" : $foto['file_name']
+				);
+				if ($this->prasarana->insert($data)) {
+					redirect('c_pengelola/page_kelola_prasarana','refresh');
+				}
+			} else {
+				# fail upload
+			}
+		} else {
+			# fail
+		}
+	}
+
+	public function edit_prasarana()
+	{
+		$this->form_validation->set_rules('id_prasarana', 'ID Prasarana', 'required');
+		$this->form_validation->set_rules('nama_prasarana', 'Nama Prasarana', 'required');
+		$this->form_validation->set_rules('status', 'Status Prasarana', 'required');
+
+		if ($this->form_validation->run()) {
+			if (!empty($_FILES['foto']['tmp_name'])) {
+				$config['upload_path']          = './uploads/';
+	            $config['allowed_types']        = 'gif|jpg|png';
+	            $config['max_size']             = 3000;
+	            $config['max_width']            = 1024;
+	            $config['max_height']           = 768;
+	            $config['encrypt_name']			= TRUE;
+
+	            $this->load->library('upload', $config);
+
+	            if ($this->upload->do_upload('foto'))
+	            {
+					$foto = $this->upload->data();
+					$foto = $foto['file_name'];
+	            } else {
+	            	$errors = $this->upload->display_errors();
+	            }
+			} else {
+				$foto = $this->input->post('hidden_foto');
+			}
+
+			if (empty($errors)) {
+				$data = array(
+					'nama_prasarana' => $this->input->post('nama_prasarana'),
+					'status' => $this->input->post('status'),
+					'foto' => (empty($foto)) ? "" : $foto
+				);
+				if ($this->prasarana->update('id_prasarana',$this->input->post('id_prasarana'),$data)) {
+					redirect('c_pengelola/page_kelola_prasarana','refresh');
+				}
+			} else {
+				# fail upload
+			}
+		} else {
+			# fail
+		}
+	}
+
+	public function hapus_prasarana()
+	{
+		if ($this->prasarana->delete($this->input->post('id_prasarana'))) {
+			redirect('c_pengelola/page_kelola_prasarana','refresh');
+		} else {
+			# error
 		}
 	}
 }
